@@ -4,13 +4,23 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
+import android.util.Log;
+
+
 import android.view.LayoutInflater;
+
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 
 import java.util.ArrayList;
 
@@ -23,7 +33,10 @@ import java.util.ArrayList;
  * Use the {@link SearchedFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchedFragment extends Fragment {
+public class SearchedFragment extends Fragment implements SearchView.OnQueryTextListener {
+
+    private static final String LOG_TAG = "MyLogs";
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -64,12 +77,6 @@ public class SearchedFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        ArrayList<String> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++)
-            list.add("Число №" + i);
-        RecyclerView recyclerView = getActivity().findViewById(R.id.searched_rec_view);
-        recyclerView.setAdapter(new FragmentRecyclerViewAdapter(list));
     }
 
     @Override
@@ -78,9 +85,17 @@ public class SearchedFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_searched, container, false);
 
-        RecyclerView recyclerView = getActivity().findViewById(R.id.searched_rec_view);
+        RecyclerView recyclerView = view.findViewById(R.id.searched_rec_view);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
+        ArrayList<UserData> list = new ArrayList<>();
+        for (int i = 1; i < 20; i++)
+            list.add(new UserData("Заключенный № " + i));
+        recyclerView.setAdapter(new FragmentRecyclerViewAdapter(list));
+
+        // Говорим фрагменту, что ему нужно отобразить меню
+        setHasOptionsMenu(true);
 
         return view;
     }
@@ -107,6 +122,36 @@ public class SearchedFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    /**
+     * Создание мени поиска
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.d(LOG_TAG, "МЕТОД onCreateOptionsMenu");
+        inflater.inflate(R.menu.search_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+    }
+
+    /**
+     * Вызывается, когда будет нажата кнопка поиска.
+     */
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        // Здесь необходимо реализовать поиск по результату запроса
+        return false;
+    }
+
+    /**
+     * Вызывается после ввода пользователем каждого символа в текстовом поле.
+     */
+    @Override
+    public boolean onQueryTextChange(String s) {
+        return false;
     }
 
     /**

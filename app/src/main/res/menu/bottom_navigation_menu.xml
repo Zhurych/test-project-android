@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/searched"
+        android:id="@+id/nav_searched"
         android:title="@string/searched"
         android:icon="@drawable/baseline_people_black_18dp" />
 
     <item
-        android:id="@+id/saved"
+        android:id="@+id/nav_saved"
         android:title="@string/saved"
-        android:icon="@drawable/baseline_storage_black_18dp" />
+        android:icon="@drawable/twotone_storage_black_36" />
 </menu>

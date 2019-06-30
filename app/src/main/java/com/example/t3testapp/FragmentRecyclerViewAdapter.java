@@ -1,8 +1,10 @@
 package com.example.t3testapp;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,9 +13,11 @@ import java.util.List;
 
 public class FragmentRecyclerViewAdapter extends RecyclerView.Adapter<FragmentRecyclerViewAdapter.ViewHolder>  {
 
-    private List<String> mValues;
+    private static final String LOG_TAG = "MyLogs";
 
-    public FragmentRecyclerViewAdapter(List<String> mValues) {
+    private List<UserData> mValues;
+
+    public FragmentRecyclerViewAdapter(List<UserData> mValues) {
         this.mValues = mValues;
     }
 
@@ -31,7 +35,10 @@ public class FragmentRecyclerViewAdapter extends RecyclerView.Adapter<FragmentRe
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.name.setText(mValues.get(position));
+        holder.photo.setImageResource(R.drawable.baseline_account_circle_black_18dp);
+        holder.name.setText(mValues.get(position).getName());
+        if (mValues.get(position).getState() == -1)
+            holder.state.setImageResource(R.drawable.baseline_save_black_18dp);
     }
 
     @Override
@@ -40,12 +47,16 @@ public class FragmentRecyclerViewAdapter extends RecyclerView.Adapter<FragmentRe
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
+        private ImageView photo;
         private TextView name;
+        private ImageView state;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            Log.d(LOG_TAG, " КОНСТРУКТОР КЛАССА ViewHolder");
+            photo = itemView.findViewById(R.id.photo);
             name = itemView.findViewById(R.id.name);
+            state = itemView.findViewById(R.id.state);
         }
     }
 }
