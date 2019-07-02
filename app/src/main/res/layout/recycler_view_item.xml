@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingLeft="@dimen/text_margin"
-    android:paddingStart="@dimen/text_margin"
-    android:paddingEnd="@dimen/tall_toolbar_height"
-    android:paddingRight="@dimen/tall_toolbar_height" >
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ImageView
-        android:id="@+id/photo"
-        android:layout_width="0dp"
+    <data>
+
+        <variable
+            name="userData"
+            type="com.example.t3testapp.UserData" />
+
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/text_margin"
+        android:paddingStart="@dimen/text_margin"
+        android:paddingEnd="@dimen/tall_toolbar_height"
+        android:paddingRight="@dimen/tall_toolbar_height" >
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_toRightOf="@+id/photo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:layout_weight="2" />
+        <ImageView
+            android:id="@+id/photo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
-    <ImageView
-        android:id="@+id/state"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:layout_weight="2" />
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/state"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+</layout>

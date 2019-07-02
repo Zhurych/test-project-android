@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,22 +27,19 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableSingleObserver;
-import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class SearchedFragment extends Fragment implements SearchView.OnQueryTextListener {
+
+    private SearchViewModel mSearchViewmodel;
+
+    private ArrayList<Item> listItem;
+
+    private ArrayList<UserData> list;
 
     private static final String LOG_TAG = "MyLogs";
 
     private OnFragmentInteractionListener mListener;
+
+    private List<Item> allCurrencyList;
 
     public SearchedFragment() {
         // Required empty public constructor
@@ -51,6 +50,10 @@ public class SearchedFragment extends Fragment implements SearchView.OnQueryText
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_searched, container, false);
+
+        mSearchViewmodel = ViewModelProviders.of(this).get(SearchViewModel.class);
+        listItem = new ArrayList<>();
+        list = new ArrayList<>();
 
         RecyclerView recyclerView = view.findViewById(R.id.searched_rec_view);
 
@@ -66,24 +69,6 @@ public class SearchedFragment extends Fragment implements SearchView.OnQueryText
 
         // Здесь должно быть имя пользователя
         String name = "zhurych" + "+in:name";
-        // Получаем объект Single (Rx)
-        NetworkService.getInstance()
-                .getJSONApi()
-                .getUsers(name)
-                .enqueue(new Callback<Users>() {
-                    @Override
-                    public void onResponse(Call<Users> call, Response<Users> response) {
-                        Users post = response.body();
-                        Log.d(LOG_TAG, "total count " + post.getTotalCount());
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<Users> call, Throwable t) {
-
-                        t.printStackTrace();
-                    }
-                });
 
         return view;
     }
@@ -106,8 +91,12 @@ public class SearchedFragment extends Fragment implements SearchView.OnQueryText
      */
     @Override
     public boolean onQueryTextSubmit(String s) {
-        // Здесь необходимо реализовать поиск по результату запроса
-        return false;
+        Log.d(LOG_TAG, "МЕТОД onQueryTextSubmit. Нажата кнопка поиска");
+        listItem = mSearchViewmodel.start();
+
+        //list = mSearchViewmodel.searchUsers(listItem);
+
+        return true;
     }
 
     /**

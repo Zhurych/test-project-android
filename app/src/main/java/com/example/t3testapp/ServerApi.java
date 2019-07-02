@@ -1,9 +1,9 @@
 package com.example.t3testapp;
 
-import io.reactivex.Single;
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.GET;
-import retrofit2.http.Query;
+import retrofit2.http.Path;
+import retrofit2.http.Url;
 
 /**
  * Интерфейс для работы с Retrofit
@@ -11,9 +11,14 @@ import retrofit2.http.Query;
  */
 public interface ServerApi {
 
-    @GET("search/users")
-    Call<Users> getUsers(
-            @Query("q") String userName
+    @GET()
+    Observable<Users> getUsers(
+            @Url String url
+    );
+
+    @GET("users/{login}")
+    Observable<UserData> getUser(
+            @Path("login") String login
     );
 
 }
