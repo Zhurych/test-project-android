@@ -1,19 +1,15 @@
 package com.example.t3testapp;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import android.util.Log;
-
 
 import android.view.LayoutInflater;
 
@@ -22,24 +18,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.t3testapp.databinding.FragmentSearchedBinding;
 
 public class SearchedFragment extends Fragment implements SearchView.OnQueryTextListener {
 
-    private SearchViewModel mSearchViewmodel;
-
-    private ArrayList<Item> listItem;
-
-    private ArrayList<UserData> list;
+    private SearchViewModel mSearchViewModel;
 
     private static final String LOG_TAG = "MyLogs";
 
-    private OnFragmentInteractionListener mListener;
-
-    private List<Item> allCurrencyList;
+    public RecyclerView recyclerView;
 
     public SearchedFragment() {
         // Required empty public constructor
@@ -49,28 +38,23 @@ public class SearchedFragment extends Fragment implements SearchView.OnQueryText
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_searched, container, false);
+        FragmentSearchedBinding binding = FragmentSearchedBinding.bind(inflater.inflate(R.layout.fragment_searched, container, false));
 
-        mSearchViewmodel = ViewModelProviders.of(this).get(SearchViewModel.class);
-        listItem = new ArrayList<>();
-        list = new ArrayList<>();
+        mSearchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
 
-        RecyclerView recyclerView = view.findViewById(R.id.searched_rec_view);
+        binding.setMSearchViewModel(mSearchViewModel);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView = binding.getRoot().findViewById(R.id.searched_rec_view);
 
-        ArrayList<UserData> list = new ArrayList<>();
-        for (int i = 1; i < 20; i++)
-            list.add(new UserData("Заключенный № " + i));
-        recyclerView.setAdapter(new FragmentRecyclerViewAdapter(list));
+        // Нужно установить LayoutManager
+        recyclerView.setLayoutManager(new LinearLayoutManager(binding.getRoot().getContext()));
+
+        recyclerView.setAdapter(mSearchViewModel.fragmentRecyclerViewAdapter.get());
 
         // Говорим фрагменту, что ему нужно отобразить меню
         setHasOptionsMenu(true);
 
-        // Здесь должно быть имя пользователя
-        String name = "zhurych" + "+in:name";
-
-        return view;
+        return binding.getRoot();
     }
 
     /**
@@ -92,9 +76,7 @@ public class SearchedFragment extends Fragment implements SearchView.OnQueryText
     @Override
     public boolean onQueryTextSubmit(String s) {
         Log.d(LOG_TAG, "МЕТОД onQueryTextSubmit. Нажата кнопка поиска");
-        listItem = mSearchViewmodel.start();
-
-        //list = mSearchViewmodel.searchUsers(listItem);
+        mSearchViewModel.searchUsers(s);
 
         return true;
     }

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.example.t3testapp.UserData" />
 
         <variable
             name="userData"
-            type="com.example.t3testapp.UserData" />
+            type="UserData" />
 
     </data>
     <LinearLayout
@@ -21,7 +23,9 @@
             android:id="@+id/photo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            app:url="@{userData.photoId}"
+            app:errorImage="@{@drawable/baseline_account_circle_black_18dp}" />
 
         <TextView
             android:id="@+id/name"
@@ -29,13 +33,15 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:layout_weight="2" />
+            android:layout_weight="2"
+            android:text="@{userData.name}" />
 
         <ImageView
             android:id="@+id/state"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:src="@{userData.state == UserData.SAVED_STATE ? @drawable/baseline_save_black_18dp : @drawable/baseline_save_black_18dp}" />
 
     </LinearLayout>
 </layout>

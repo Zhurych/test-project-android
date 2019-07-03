@@ -1,17 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".SearchedFragment"
-    android:orientation="vertical" >
+<layout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searched_rec_view"
+    <data>
+        <import type="android.view.View" />
+        <import type="com.example.t3testapp.SearchViewModel" />
+
+        <variable
+            name="mSearchViewModel"
+            type="com.example.t3testapp.SearchViewModel" />
+    </data>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        tools:context=".SearchedFragment"
+        android:orientation="vertical" >
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searched_rec_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adapter="@{mSearchViewModel.fragmentRecyclerViewAdapter}" >
 
-</LinearLayout>
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/empty_search_view"
+            android:text="@string/empty_rec_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="@{mSearchViewModel.data.size() > 0 ? View.GONE : View.VISIBLE}" />
+
+    </LinearLayout>
+
+</layout>

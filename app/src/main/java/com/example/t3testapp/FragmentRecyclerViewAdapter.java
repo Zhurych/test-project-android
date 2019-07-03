@@ -7,11 +7,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ObservableField;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.t3testapp.databinding.RecyclerViewItemBinding;
 
 import java.util.List;
 
-public class FragmentRecyclerViewAdapter extends RecyclerView.Adapter<FragmentRecyclerViewAdapter.ViewHolder>  {
+import io.reactivex.Observable;
+
+/**
+ * Адаптер для RecyclerView основанный на DataBinding
+ */
+public class FragmentRecyclerViewAdapter extends RecyclerView.Adapter<FragmentRecyclerViewAdapter.UserDataHolder>  {
 
     private static final String LOG_TAG = "MyLogs";
 
@@ -25,20 +34,19 @@ public class FragmentRecyclerViewAdapter extends RecyclerView.Adapter<FragmentRe
      * Создание новых View и ViewHolder элемента списка, которые впоследствии могут переиспользоваться.
      */
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_item, parent, false);
-        return new ViewHolder(v);
+    public UserDataHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        RecyclerViewItemBinding binding = DataBindingUtil.inflate(inflater, R.layout.recycler_view_item, parent, false);
+        return new UserDataHolder(binding);
     }
 
     /**
-     * Заполнение виджетов View данными из элемента списка с номером i
+     * Заполнение виджетов View данными из элемента списка mValues, с индексом = position
+     * передача объектов в биндинг
      */
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.photo.setImageResource(R.drawable.baseline_account_circle_black_18dp);
-        holder.name.setText(mValues.get(position).getName());
-        if (mValues.get(position).getState() == -1)
-            holder.state.setImageResource(R.drawable.baseline_save_black_18dp);
+    public void onBindViewHolder(UserDataHolder holder, int position) {
+        holder.bind(mValues.get(position));
     }
 
     @Override
@@ -46,17 +54,22 @@ public class FragmentRecyclerViewAdapter extends RecyclerView.Adapter<FragmentRe
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView photo;
-        private TextView name;
-        private ImageView state;
+    public class UserDataHolder extends RecyclerView.ViewHolder {
+        // Биндинг, основанный на имени Layout (а именно: R.layout.recycler_view_item)
+        RecyclerViewItemBinding binding;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
+        // Конструктор принимает биндинг и передает родителю его корневой View
+        public UserDataHolder(RecyclerViewItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
             Log.d(LOG_TAG, " КОНСТРУКТОР КЛАССА ViewHolder");
-            photo = itemView.findViewById(R.id.photo);
-            name = itemView.findViewById(R.id.name);
-            state = itemView.findViewById(R.id.state);
+        }
+
+        public void bind(UserData userData) {
+            // Установка биндинга (передача в него объекта userData)
+            binding.setUserData(userData);
+            // Используется для того, что бы биндинг выполинлся как можно скорее
+            binding.executePendingBindings();
         }
     }
 }

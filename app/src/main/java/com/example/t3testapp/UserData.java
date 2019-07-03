@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public class UserData {
 
+    public static final int SAVED_STATE = 1;
+    public static final int NOT_SAVED_STATE = 0;
+
     @SerializedName("id")
     private Integer _id;
 
