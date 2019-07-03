@@ -53,7 +53,7 @@ public class SearchViewModel extends AndroidViewModel {
         name.append("search/users?q=").append(fullName).append("+in:name");
         Log.d(LOG_TAG, name.toString());
 
-        Disposable disposable = serverApi.getUsers(name.toString())
+        serverApi.getUsers(name.toString())
                 .map(new Function<Users, List<Item>>(
 
                 ) {
@@ -62,13 +62,15 @@ public class SearchViewModel extends AndroidViewModel {
                         Log.d(LOG_TAG, "Преобразование Users в List<Items>: " + users.getItems().size());
                         return users.getItems();
                     }
-        }).flatMap(new Function<List<Item>, ObservableSource<Item>>() {
+        })
+                .flatMap(new Function<List<Item>, ObservableSource<Item>>() {
             @Override
             public ObservableSource<Item> apply(List<Item> items) throws Exception {
                 Log.d(LOG_TAG, "Преобзразование List<Item> в Item: " + items);
                 return Observable.fromIterable(items);
             }
-        }).flatMap(new Function<Item, ObservableSource<UserData>>() {
+        })
+                .flatMap(new Function<Item, ObservableSource<UserData>>() {
             @Override
             public ObservableSource<UserData> apply(Item item) throws Exception {
                 Log.d(LOG_TAG, "Запрос юзера по логину: " + item.getLogin());
@@ -80,21 +82,30 @@ public class SearchViewModel extends AndroidViewModel {
                 // Результаты будем получать в основном потоке
                 .observeOn(AndroidSchedulers.mainThread())
 
-                .subscribe(new Consumer<UserData>() {
+                .subscribe(new Observer<UserData>() {
                     @Override
-                    public void accept(UserData userData) throws Exception {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(UserData userData) {
                         listUsersData.add(userData);
-                        data.set(listUsersData);
                         // Сюда приходят объекты юзеров !!!
                         Log.d(LOG_TAG, "Имя пользователя: " + userData.getName());
                         Log.d(LOG_TAG, "Фото url : " + userData.getPhotoId());
                         Log.d(LOG_TAG, "id : " + userData.get_id());
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        // Здесь ловим ошибки
-                        Log.d(LOG_TAG, "Ошибочка: " + throwable.getMessage());
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(LOG_TAG, "Полностью завершилась загрузка. Размер списка: " + listUsersData.size());
+                        data.set(listUsersData);
                     }
                 });
 
